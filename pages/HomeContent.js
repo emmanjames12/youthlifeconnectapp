@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        elevation: 10,
+        elevation: 9,
       },
       leftContent:{
         width: '75%',
