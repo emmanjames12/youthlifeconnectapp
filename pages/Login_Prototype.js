@@ -1,3 +1,4 @@
+import { ToastAndroid } from "react-native";
 import React from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native'
 import { IconButton, TextInput } from 'react-native-paper';
@@ -7,7 +8,10 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 
 
-const Login = () => {
+
+
+const LoginPage = () => {
+    
     
     const navigation = useNavigation();
 
@@ -24,6 +28,8 @@ const Login = () => {
     const gotoHome =() => {
         navigation.navigate('welcomeHome');
     };
+
+    const [showPass, setShowPass] = React.useState(false);
   return (
         <SafeAreaView>
            
@@ -49,11 +55,20 @@ const Login = () => {
                     placeholder='Email'
                     keyboardType='email-address'
                     autoCapitalize='none'
+                    left={<TextInput.Icon icon="email" />}
                 />
                 <TextInput
                     style={styles.loginTextInput}
                     placeholder='Password'
                     autoCapitalize='none'
+                    left={<TextInput.Icon icon="lock" />}
+              secureTextEntry={!showPass}
+              right={
+                <TextInput.Icon
+                  icon={showPass ? "eye" : "eye-off"}
+                  onPress={() => setShowPass(!showPass)}
+                />
+              }
                 />
                 <TouchableOpacity onPress={forgotPass}>
                     <Text style={styles.forgotpassButton}>
@@ -150,4 +165,5 @@ const styles = StyleSheet.create({
         fontSize: 13
     },
 })
-export default Login;
+
+export default LoginPage;
