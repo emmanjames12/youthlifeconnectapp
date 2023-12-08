@@ -1,11 +1,13 @@
 import { ToastAndroid } from "react-native";
-import React from 'react'
+import React, { useState } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native'
 import { IconButton, TextInput } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import { Formik } from "formik";
+import { useFormik } from 'formik';
 import * as Yup from "yup";
+import axios from 'axios';
+
 
 
 
@@ -28,6 +30,32 @@ const LoginPage = () => {
     const gotoHome =() => {
         navigation.navigate('welcomeHome');
     };
+
+    const handleSignup = async (values, { setSubmitting, setFieldError }) => {
+        try {
+          // Your existing logic here
+    
+          const payload = {  
+            email: values.email,
+            password: values.password,
+          }
+          const response = await axios.post('http://192.168.1.4:3000/api/login',payload);
+    
+          console.log(response.data); 
+          Navigation.navigate('SignupConfirmation');
+        } catch (error) {
+          if (error.response && (error.response.status === 404 || error.response.status === 409)) {
+            // HTTP status 404 corresponds to Not Found (Email already taken)
+            // HTTP status 409 corresponds to Conflict (Email already taken)
+            // Handle the specific error here, e.g., display a message to the user
+            setFieldError('email', 'Email already taken. Please choose another.');
+          } else {
+            // Handle other errors as needed
+          }
+        } finally {
+          setSubmitting(false);
+        }
+      };
 
     const [showPass, setShowPass] = React.useState(false);
   return (

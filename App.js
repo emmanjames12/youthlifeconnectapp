@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, Image, TextInput, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LandingPage from './pages/LandingPage';
@@ -10,6 +10,7 @@ import AccountRecoveryPage from './pages/AccountRecoveryPage';
 import AccountRecoveryConfirmation from './pages/AccountRecoveryConfirmationPage';
 import HomeWelcome from './pages/HomeWelcome';
 import Home from './pages/Home';
+import axios from 'axios';
 
 const Stack = createNativeStackNavigator();
 

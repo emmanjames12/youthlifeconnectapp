@@ -1,12 +1,16 @@
-import React from 'react';
+import React, {useState,} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { IconButton, TextInput } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 
 
 
 const LoginPage = () => {
+  const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
   const navigation = useNavigation();
 
@@ -16,8 +20,34 @@ const LoginPage = () => {
   const goLogin =() =>{
     navigation.navigate('Login_Prototype')
   };
-  const accountConfirmation = () =>{
+  const accountConfirmation = () =>{ 
     navigation.navigate('SignupConfirmation')
+  };
+  
+
+  const handleSignup = async (values, { setSubmitting, setFieldError }) => {
+    try {
+      // Your existing logic here
+
+      const payload = {  
+        name: values.name,
+        email: values.email,
+        password: values.password,
+        // c_password: values.confirmPassword,
+      }
+      const response = await axios.post('http://192.168.1.6:3000/api/register',payload);
+
+      console.log(response.data); 
+      Navigation.navigate('SignupConfirmation');
+    } catch (error) {
+      if (error.response && (error.response.status === 404 || error.response.status === 409)) {
+        setFieldError('email', 'Email already taken. Please choose another.');
+      } else {
+
+      }
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -35,18 +65,25 @@ const LoginPage = () => {
           <TextInput
             style={styles.signupTextInput}
             placeholder='Name'
+            value={name} onChangeText={setName}
             autoCapitalize='sentences'
+            left={<TextInput.Icon icon="account-outline" />}
           />
           <TextInput
             style={styles.signupTextInput}
             placeholder='Email'
+            value={email} onChangeText={setEmail}
             autoCapitalize='none'
+            left={<TextInput.Icon icon="email-outline" />}
           />
           <TextInput
             style={styles.signupTextInput}
             placeholder='Password'
+            value={password} onChangeText={setPassword} secureTextEntry
             autoCapitalize='none'
+            left={<TextInput.Icon icon="lock-outline" />}
           />
+         
           <TouchableOpacity style={styles.signupButton} onPress={accountConfirmation}>
             <Text style={styles.signupText}>
               Sign up
