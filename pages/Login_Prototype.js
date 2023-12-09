@@ -4,13 +4,19 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native'
 import { IconButton, TextInput } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import { useFormik } from 'formik';
+import { Formik } from 'formik';
 import * as Yup from "yup";
 import axios from 'axios';
 
 
 
-
+const SignupSchema = Yup.object().shape({
+    email: Yup.string().email('Invalid email.').required('Please enter your email.'),
+    password: Yup.string()
+    .min(8, 'Password must be at least 8 characters.')
+    .required('Please enter your password.'),
+  });
+  
 
 const LoginPage = () => {
     
@@ -59,6 +65,14 @@ const LoginPage = () => {
 
     const [showPass, setShowPass] = React.useState(false);
   return (
+    <Formik initialValues={{
+        email: '',
+        password: '',
+      }}
+      validationSchema={SignupSchema}
+      >
+      {({values,errors,touched,handleChange,setFieldTouched,isValid,handleSubmit,dirty}) => (
+
         <SafeAreaView>
            
             <View style={styles.navigationBar}>
@@ -120,6 +134,8 @@ const LoginPage = () => {
                 </View>
             </View>
         </SafeAreaView>
+        )}
+    </Formik>
     )
 }
 

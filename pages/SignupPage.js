@@ -4,7 +4,21 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { IconButton, TextInput } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+import * as Yup from "yup";
+import {Formik} from 'formik';
 
+
+
+const SignupSchema = Yup.object().shape({
+  name: Yup.string()
+    .min(3, 'Too Short!')
+    .max(50, 'Too Long!')
+    .required('Please enter your name.'),
+  email: Yup.string().email('Invalid email.').required('Please enter your email address.'),
+  password: Yup.string()
+  .min(8, 'Password must be at least 8 characters.')
+  .required('Please enter your password.'),
+});
 
 
 const LoginPage = () => {
@@ -20,7 +34,7 @@ const LoginPage = () => {
   const goLogin =() =>{
     navigation.navigate('Login_Prototype')
   };
-  const accountConfirmation = () =>{ 
+  const accountConfirmation = () =>{
     navigation.navigate('SignupConfirmation')
   };
   
@@ -51,6 +65,14 @@ const LoginPage = () => {
   };
 
   return (
+    <Formik initialValues={{
+      name: '',
+      email: '',
+      password: '',
+    }}
+    validation={SignupSchema}
+    >
+    {({values,errors,touched,handleChange,setFieldTouched,isValid,handleSubmit,dirty}) => (
     <SafeAreaView style={styles.Container}>
       <View style={styles.Header}>
         <TouchableOpacity onPress={goBack}>
@@ -65,9 +87,11 @@ const LoginPage = () => {
           <TextInput
             style={styles.signupTextInput}
             placeholder='Name'
-            value={name} onChangeText={setName}
+            value={name}
             autoCapitalize='sentences'
             left={<TextInput.Icon icon="account-outline" />}
+            onChangeText={handleChange('name')}
+            onBlur={() => setFieldTouched('name')}
           />
           <TextInput
             style={styles.signupTextInput}
@@ -84,7 +108,7 @@ const LoginPage = () => {
             left={<TextInput.Icon icon="lock-outline" />}
           />
          
-          <TouchableOpacity style={styles.signupButton} onPress={accountConfirmation}>
+          <TouchableOpacity style={styles.signupButton} onPress= {accountConfirmation}>
             <Text style={styles.signupText}>
               Sign up
             </Text>
@@ -101,6 +125,8 @@ const LoginPage = () => {
           </View>
         </View>
     </SafeAreaView>
+    )}
+    </Formik>  
   )
 }
 
